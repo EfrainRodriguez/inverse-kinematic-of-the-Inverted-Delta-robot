@@ -28,7 +28,7 @@ function robot = invk_invDelta(position)
     for i = 1: 3
         h(i) = sqrt(Pz ^ 2 + s(i) ^ 2);
         alpha(i) = atan2(Pz, s(i));
-        beta(i) = acos((robot.L2 ^ 2 - robot.L1 ^ 2 - h(i)) / (-2 * robot.L1 * h(i)));
+        beta(i) = acos((robot.L2 ^ 2 - robot.L1 ^ 2 - h(i) ^ 2) / (-2 * robot.L1 * h(i)));
     end
     
     %elbow point
@@ -38,7 +38,12 @@ function robot = invk_invDelta(position)
                   robot.L1 * sin(pi - alpha(i) - beta(i))];
     end
     
+    for i = 1: 3
+        theta(i) = pi + atan2(B(i,3) - Pz, s(i) + (robot.L1 * cos(pi - alpha(i) - beta(i))));
+    end
+    
     %joint positions
+    robot.theta = theta
     robot.A = A;
     robot.B = B;
     robot.C = position;
